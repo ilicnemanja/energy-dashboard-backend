@@ -1,15 +1,22 @@
+// NestJS Essential
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 // Modules
 import { SharedModule } from './shared/shared.module';
+import { SolarModule } from './solar/solar.module';
+
+// Contronllers
+import { AppController } from './app.controller';
+
+// Services
+import { ConfigService } from '@nestjs/config';
+import { AppService } from './app.service';
 
 // ORM
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-// Services
-import { ConfigService } from '@nestjs/config';
+// Entities
+import { SolarMeasurement } from './solar/entities/solar-measurement.entity';
 
 @Module({
   imports: [
@@ -22,7 +29,7 @@ import { ConfigService } from '@nestjs/config';
         username: configService.get<string>('POSTGRES_USER', 'postgres'),
         password: configService.get<string>('POSTGRES_PASSWORD', 'postgres'),
         database: configService.get<string>('POSTGRES_DB', 'energy_dashboard'),
-        entities: [],
+        entities: [SolarMeasurement],
         synchronize: configService.get<string>('NODE_ENV') !== 'production',
         logging: configService.get<string>('NODE_ENV') === 'development',
         retryAttempts: 10,
@@ -30,6 +37,7 @@ import { ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
+    SolarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

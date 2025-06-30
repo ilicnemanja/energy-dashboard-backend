@@ -40,9 +40,9 @@ export class AppService {
         ORDER BY table_name;
       `;
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const result = await this.dataSource.query(tablesQuery);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+      const result =
+        await this.dataSource.query<{ table_name: string }[]>(tablesQuery);
+
       const tables = result.map(
         (row: { table_name: string }) => row.table_name,
       );
@@ -50,7 +50,6 @@ export class AppService {
       return {
         status: 'OK',
         timestamp: new Date().toISOString(),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         tables,
         connection: true,
       };
